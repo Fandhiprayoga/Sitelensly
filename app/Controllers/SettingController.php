@@ -5,6 +5,13 @@ namespace App\Controllers;
 class SettingController extends BaseController
 {
     /**
+     * Default favicon & logo paths (relative to public/)
+     */
+    private string $defaultFavicon = 'favicon.ico';
+    private string $defaultLogo    = 'assets/img/stisla-fill.svg';
+    private string $brandingPath   = 'assets/img/branding/';
+
+    /**
      * Default setting values
      */
     private array $defaults = [
@@ -13,6 +20,8 @@ class SettingController extends BaseController
         'App.siteDescription' => 'Boilerplate CodeIgniter 4 dengan Shield RBAC',
         'App.siteFooter'      => 'CI4 Shield RBAC Boilerplate',
         'App.siteVersion'     => '1.0.0',
+        'App.favicon'         => '',
+        'App.logo'            => '',
         'App.maintenanceMode' => '0',
         'App.maintenanceMsg'  => 'Sistem sedang dalam pemeliharaan. Silakan coba beberapa saat lagi.',
         'App.defaultRole'     => 'user',
@@ -42,6 +51,10 @@ class SettingController extends BaseController
             'activeTab'  => $activeTab,
             'groups'     => $authGroups->groups,
             'settings'   => $this->getAllSettings(),
+            'faviconUrl' => self::getFaviconUrl(),
+            'logoUrl'    => self::getLogoUrl(),
+            'hasCustomFavicon' => ! empty(setting('App.favicon')),
+            'hasCustomLogo'    => ! empty(setting('App.logo')),
         ];
 
         return $this->renderView('settings/index', $data);
@@ -132,6 +145,110 @@ class SettingController extends BaseController
         }
 
         return redirect()->to('/admin/settings?tab=mail')->with('success', 'Pengaturan email berhasil diperbarui.');
+    }
+
+    /**
+     * Upload favicon atau logo
+     */
+    public function updateBranding()
+    {
+        $type = $this->request->getPost('type'); // 'favicon' atau 'logo'
+
+        if (! in_array($type, ['favicon', 'logo'], true)) {
+            return redirect()->back()->with('error', 'Tipe branding tidak valid.');
+        }
+
+        $file = $this->request->getFile('branding_file');
+
+        if (! $file || ! $file->isValid() || $file->hasMoved()) {
+            return redirect()->back()->with('error', 'File tidak valid atau belum dipilih.');
+        }
+
+        // Validasi tipe file
+        if ($type === 'favicon') {
+            $validTypes = ['image/x-icon', 'image/vnd.microsoft.icon', 'image/png', 'image/svg+xml', 'image/ico'];
+            $maxSize    = 512; // KB
+            $validExts  = ['ico', 'png', 'svg'];
+        } else {
+            $validTypes = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'];
+            $maxSize    = 2048; // KB
+            $validExts  = ['png', 'jpg', 'jpeg', 'svg', 'webp'];
+        }
+
+        if ($file->getSizeByUnit('kb') > $maxSize) {
+            return redirect()->back()->with('error', ucfirst($type) . ' maksimal ' . $maxSize . ' KB.');
+        }
+
+        $ext = strtolower($file->getClientExtension());
+        if (! in_array($ext, $validExts, true)) {
+            return redirect()->back()->with('error', 'Format file tidak didukung. Gunakan: ' . implode(', ', $validExts));
+        }
+
+        // Hapus file lama jika ada
+        $this->removeOldBranding($type);
+
+        // Simpan file baru
+        $newName = $type . '_' . time() . '.' . $ext;
+        $file->move(FCPATH . $this->brandingPath, $newName);
+
+        // Simpan path ke setting
+        $settingKey = $type === 'favicon' ? 'App.favicon' : 'App.logo';
+        setting($settingKey, $this->brandingPath . $newName);
+
+        return redirect()->to('/admin/settings?tab=general')
+            ->with('success', ucfirst($type) . ' berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus/reset favicon atau logo ke default
+     */
+    public function deleteBranding()
+    {
+        $type = $this->request->getPost('type');
+
+        if (! in_array($type, ['favicon', 'logo'], true)) {
+            return redirect()->back()->with('error', 'Tipe branding tidak valid.');
+        }
+
+        $this->removeOldBranding($type);
+
+        // Reset setting ke kosong (akan fallback ke default)
+        $settingKey = $type === 'favicon' ? 'App.favicon' : 'App.logo';
+        setting($settingKey, '');
+
+        return redirect()->to('/admin/settings?tab=general')
+            ->with('success', ucfirst($type) . ' berhasil direset ke default.');
+    }
+
+    /**
+     * Hapus file branding lama dari disk
+     */
+    private function removeOldBranding(string $type): void
+    {
+        $settingKey  = $type === 'favicon' ? 'App.favicon' : 'App.logo';
+        $currentPath = setting($settingKey);
+
+        if (! empty($currentPath) && is_file(FCPATH . $currentPath)) {
+            unlink(FCPATH . $currentPath);
+        }
+    }
+
+    /**
+     * Helper: Ambil URL favicon (custom atau default)
+     */
+    public static function getFaviconUrl(): string
+    {
+        $custom = setting('App.favicon');
+        return base_url(! empty($custom) ? $custom : 'favicon.ico');
+    }
+
+    /**
+     * Helper: Ambil URL logo (custom atau default)
+     */
+    public static function getLogoUrl(): string
+    {
+        $custom = setting('App.logo');
+        return base_url(! empty($custom) ? $custom : 'assets/img/stisla-fill.svg');
     }
 
     /**

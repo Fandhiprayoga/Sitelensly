@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="login-brand">
-  <img src="<?= base_url('assets/img/stisla-fill.svg') ?>" alt="logo" width="100" class="shadow-light rounded-circle">
+  <img src="<?= \App\Controllers\SettingController::getLogoUrl() ?>" alt="logo" width="100" class="shadow-light rounded-circle">
 </div>
 
 <div class="card card-primary">

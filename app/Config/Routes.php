@@ -68,6 +68,8 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
             $routes->post('update/general', 'SettingController::updateGeneral');
             $routes->post('update/auth', 'SettingController::updateAuth');
             $routes->post('update/mail', 'SettingController::updateMail');
+            $routes->post('update/branding', 'SettingController::updateBranding');
+            $routes->post('delete/branding', 'SettingController::deleteBranding');
         });
 
         // Manajemen Periode

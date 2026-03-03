@@ -101,6 +101,84 @@ $s = function (string $key) use ($settings) {
                 </div>
               </div>
             </form>
+
+            <!-- ======= BRANDING: FAVICON & LOGO ======= -->
+            <hr>
+            <h6 class="text-muted mb-4"><i class="fas fa-palette"></i> Branding</h6>
+
+            <div class="row">
+              <!-- Favicon -->
+              <div class="col-md-6">
+                <div class="card card-primary">
+                  <div class="card-header"><h4>Favicon</h4></div>
+                  <div class="card-body text-center">
+                    <img src="<?= $faviconUrl ?>" alt="Favicon" style="max-height:64px;max-width:64px;" class="mb-3 img-thumbnail" id="favicon-preview">
+                    <p class="text-muted small mb-3">
+                      <?= $hasCustomFavicon ? '<span class="badge badge-info">Custom</span>' : '<span class="badge badge-secondary">Default</span>' ?>
+                    </p>
+                    <form action="<?= base_url('admin/settings/update/branding') ?>" method="post" enctype="multipart/form-data">
+                      <?= csrf_field() ?>
+                      <input type="hidden" name="type" value="favicon">
+                      <div class="custom-file mb-3">
+                        <input type="file" class="custom-file-input" id="favicon_file" name="branding_file"
+                               accept=".ico,.png,.svg">
+                        <label class="custom-file-label" for="favicon_file">Pilih file...</label>
+                      </div>
+                      <small class="form-text text-muted mb-3 d-block">Format: ICO, PNG, SVG. Maks: 512 KB.</small>
+                      <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-upload"></i> Upload Favicon
+                      </button>
+                    </form>
+                    <?php if ($hasCustomFavicon): ?>
+                    <form action="<?= base_url('admin/settings/delete/branding') ?>" method="post" class="mt-2"
+                          onsubmit="return confirm('Reset favicon ke default?')">
+                      <?= csrf_field() ?>
+                      <input type="hidden" name="type" value="favicon">
+                      <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-undo"></i> Reset ke Default
+                      </button>
+                    </form>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Logo -->
+              <div class="col-md-6">
+                <div class="card card-primary">
+                  <div class="card-header"><h4>Logo</h4></div>
+                  <div class="card-body text-center">
+                    <img src="<?= $logoUrl ?>" alt="Logo" style="max-height:100px;max-width:200px;" class="mb-3 img-thumbnail" id="logo-preview">
+                    <p class="text-muted small mb-3">
+                      <?= $hasCustomLogo ? '<span class="badge badge-info">Custom</span>' : '<span class="badge badge-secondary">Default</span>' ?>
+                    </p>
+                    <form action="<?= base_url('admin/settings/update/branding') ?>" method="post" enctype="multipart/form-data">
+                      <?= csrf_field() ?>
+                      <input type="hidden" name="type" value="logo">
+                      <div class="custom-file mb-3">
+                        <input type="file" class="custom-file-input" id="logo_file" name="branding_file"
+                               accept=".png,.jpg,.jpeg,.svg,.webp">
+                        <label class="custom-file-label" for="logo_file">Pilih file...</label>
+                      </div>
+                      <small class="form-text text-muted mb-3 d-block">Format: PNG, JPG, SVG, WebP. Maks: 2 MB.</small>
+                      <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-upload"></i> Upload Logo
+                      </button>
+                    </form>
+                    <?php if ($hasCustomLogo): ?>
+                    <form action="<?= base_url('admin/settings/delete/branding') ?>" method="post" class="mt-2"
+                          onsubmit="return confirm('Reset logo ke default?')">
+                      <?= csrf_field() ?>
+                      <input type="hidden" name="type" value="logo">
+                      <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-undo"></i> Reset ke Default
+                      </button>
+                    </form>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- ============================================ -->
@@ -278,3 +356,15 @@ $s = function (string $key) use ($settings) {
     </div>
   </div>
 </div>
+
+<?= $this->section('page_js') ?>
+<script>
+// Update label saat file dipilih
+document.querySelectorAll('.custom-file-input').forEach(function(input) {
+  input.addEventListener('change', function() {
+    var fileName = this.files[0] ? this.files[0].name : 'Pilih file...';
+    this.nextElementSibling.textContent = fileName;
+  });
+});
+</script>
+<?= $this->endSection() ?>
