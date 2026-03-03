@@ -32,9 +32,16 @@ function isDropdownActive(array $paths): string {
 
       <!-- Dashboard -->
       <li class="menu-header">Dashboard</li>
-      <li class="<?= isMenuActive('dashboard') && !str_contains($currentUrl, 'admin') ? 'active' : '' ?>">
+      <li class="<?= isMenuActive('dashboard') && !str_contains($currentUrl, 'admin') && !str_contains($currentUrl, 'performance-dashboard') ? 'active' : '' ?>">
         <a class="nav-link" href="<?= base_url('dashboard') ?>"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
       </li>
+
+      <!-- Dashboard Performansi (semua user yang punya permission) -->
+      <?php if (activeGroupCan('performance.dashboard')): ?>
+      <li class="<?= isMenuActive('performance-dashboard') ? 'active' : '' ?>">
+        <a class="nav-link" href="<?= base_url('performance-dashboard') ?>"><i class="fas fa-chart-line"></i> <span>Dashboard Performansi</span></a>
+      </li>
+      <?php endif; ?>
 
       <!-- Admin Menu (hanya untuk active group yang punya akses admin) -->
       <?php if (activeGroupCan('admin.access')): ?>
@@ -68,6 +75,38 @@ function isDropdownActive(array $paths): string {
         <a class="nav-link" href="<?= base_url('admin/settings') ?>"><i class="fas fa-cog"></i> <span>Pengaturan</span></a>
       </li>
       <?php endif; ?>
+
+      <!-- Performansi Website Menu -->
+      <li class="menu-header">Performansi Website</li>
+
+      <!-- Manajemen Periode -->
+      <?php if (activeGroupCan('periods.list')): ?>
+      <li class="<?= isMenuActive('admin/periods') ?>">
+        <a class="nav-link" href="<?= base_url('admin/periods') ?>"><i class="fas fa-calendar-alt"></i> <span>Manajemen Periode</span></a>
+      </li>
+      <?php endif; ?>
+
+      <!-- Master Website -->
+      <?php if (activeGroupCan('websites.list')): ?>
+      <li class="<?= isMenuActive('admin/websites') ?>">
+        <a class="nav-link" href="<?= base_url('admin/websites') ?>"><i class="fas fa-globe"></i> <span>Master Website</span></a>
+      </li>
+      <?php endif; ?>
+
+      <!-- Input Data Performansi -->
+      <?php if (activeGroupCan('performance.input')): ?>
+      <li class="<?= isMenuActive('admin/performance') ?>">
+        <a class="nav-link" href="<?= base_url('admin/performance') ?>"><i class="fas fa-keyboard"></i> <span>Input Data Performansi</span></a>
+      </li>
+      <?php endif; ?>
+
+      <!-- Laporan Ringkas -->
+      <?php if (activeGroupCan('reports.view')): ?>
+      <li class="<?= isMenuActive('admin/reports') ?>">
+        <a class="nav-link" href="<?= base_url('admin/reports') ?>"><i class="fas fa-file-alt"></i> <span>Laporan Ringkas</span></a>
+      </li>
+      <?php endif; ?>
+
       <?php endif; ?>
 
       <!-- Profil -->

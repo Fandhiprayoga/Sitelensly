@@ -154,6 +154,22 @@ $groupLabel = activeGroupTitle();
             </a>
           </div>
           <?php endif; ?>
+
+          <?php if (activeGroupCan('performance.dashboard')): ?>
+          <div class="col-6 mb-3">
+            <a href="<?= base_url('performance-dashboard') ?>" class="btn btn-success btn-block">
+              <i class="fas fa-chart-line"></i><br>Dashboard Performansi
+            </a>
+          </div>
+          <?php endif; ?>
+
+          <?php if (activeGroupCan('performance.input')): ?>
+          <div class="col-6 mb-3">
+            <a href="<?= base_url('admin/performance/create') ?>" class="btn btn-primary btn-block">
+              <i class="fas fa-keyboard"></i><br>Input Performansi
+            </a>
+          </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
