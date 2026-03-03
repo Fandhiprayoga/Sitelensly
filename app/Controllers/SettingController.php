@@ -16,7 +16,7 @@ class SettingController extends BaseController
         'App.maintenanceMode' => '0',
         'App.maintenanceMsg'  => 'Sistem sedang dalam pemeliharaan. Silakan coba beberapa saat lagi.',
         'App.defaultRole'     => 'user',
-        'App.allowRegistration' => '1',
+        'Auth.allowRegistration' => '1',
         'Mail.protocol'       => 'smtp',
         'Mail.hostname'       => '',
         'Mail.port'           => '587',
@@ -90,7 +90,7 @@ class SettingController extends BaseController
         }
 
         setting('App.defaultRole', $this->request->getPost('default_role'));
-        setting('App.allowRegistration', $this->request->getPost('allow_registration') ? '1' : '0');
+        setting('Auth.allowRegistration', $this->request->getPost('allow_registration') ? '1' : '0');
         setting('App.maintenanceMode', $this->request->getPost('maintenance_mode') ? '1' : '0');
         setting('App.maintenanceMsg', $this->request->getPost('maintenance_msg') ?? '');
 

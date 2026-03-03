@@ -129,7 +129,7 @@ $s = function (string $key) use ($settings) {
                 <div class="col-sm-9">
                   <label class="custom-switch mt-2">
                     <input type="checkbox" name="allow_registration" value="1" class="custom-switch-input"
-                           <?= ($settings['App.allowRegistration'] ?? '1') === '1' ? 'checked' : '' ?>>
+                           <?= ($settings['Auth.allowRegistration'] ?? '1') === '1' ? 'checked' : '' ?>>
                     <span class="custom-switch-indicator"></span>
                     <span class="custom-switch-description">Izinkan registrasi user baru</span>
                   </label>

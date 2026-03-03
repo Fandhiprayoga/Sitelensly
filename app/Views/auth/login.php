@@ -58,7 +58,9 @@
     </form>
   </div>
 </div>
+<?php if (setting('Auth.allowRegistration')): ?>
 <div class="mt-5 text-muted text-center">
   Belum punya akun? <a href="<?= url_to('register') ?>">Daftar</a>
 </div>
+<?php endif; ?>
 <?= $this->endSection() ?>
