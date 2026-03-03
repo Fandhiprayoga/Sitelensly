@@ -30,6 +30,9 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
     // Dashboard Performansi (accessible by all logged-in users with permission)
     $routes->get('performance-dashboard', 'PerformanceDashboardController::index');
 
+    // Hasil Awarding (accessible by all logged-in users with permission)
+    $routes->get('awarding-results', 'AwardingResultController::index');
+
     // Switch Active Group
     $routes->post('switch-group', 'GroupSwitchController::switch');
 
@@ -102,6 +105,45 @@ $routes->group('', ['filter' => 'session'], static function ($routes) {
         $routes->group('reports', static function ($routes) {
             $routes->get('/', 'ReportController::index', ['filter' => 'permission:reports.view']);
             $routes->get('export-csv', 'ReportController::exportCsv', ['filter' => 'permission:reports.export']);
+        });
+
+        // ---------------------------------------------------------------
+        // Awarding (SAW)
+        // ---------------------------------------------------------------
+        $routes->group('awarding', static function ($routes) {
+            // Periode Awarding
+            $routes->group('periods', static function ($routes) {
+                $routes->get('/', 'AwardingPeriodController::index', ['filter' => 'permission:awarding.periods.list']);
+                $routes->get('create', 'AwardingPeriodController::create', ['filter' => 'permission:awarding.periods.create']);
+                $routes->post('store', 'AwardingPeriodController::store', ['filter' => 'permission:awarding.periods.create']);
+                $routes->get('edit/(:num)', 'AwardingPeriodController::edit/$1', ['filter' => 'permission:awarding.periods.edit']);
+                $routes->post('update/(:num)', 'AwardingPeriodController::update/$1', ['filter' => 'permission:awarding.periods.edit']);
+                $routes->post('set-status/(:num)', 'AwardingPeriodController::setStatus/$1', ['filter' => 'permission:awarding.periods.edit']);
+                $routes->post('delete/(:num)', 'AwardingPeriodController::delete/$1', ['filter' => 'permission:awarding.periods.delete']);
+            });
+
+            // Bobot Penilaian
+            $routes->group('weights', static function ($routes) {
+                $routes->get('/', 'AwardingWeightController::index', ['filter' => 'permission:awarding.weights.manage']);
+                $routes->post('store', 'AwardingWeightController::store', ['filter' => 'permission:awarding.weights.manage']);
+            });
+
+            // Input Penilaian
+            $routes->group('scores', static function ($routes) {
+                $routes->get('/', 'AwardingScoreController::index', ['filter' => 'permission:awarding.scores.list']);
+                $routes->get('create', 'AwardingScoreController::create', ['filter' => 'permission:awarding.scores.input']);
+                $routes->post('store', 'AwardingScoreController::store', ['filter' => 'permission:awarding.scores.input']);
+                $routes->get('edit/(:num)', 'AwardingScoreController::edit/$1', ['filter' => 'permission:awarding.scores.edit']);
+                $routes->post('update/(:num)', 'AwardingScoreController::update/$1', ['filter' => 'permission:awarding.scores.edit']);
+                $routes->post('delete/(:num)', 'AwardingScoreController::delete/$1', ['filter' => 'permission:awarding.scores.delete']);
+                $routes->get('get-performance-data', 'AwardingScoreController::getPerformanceData', ['filter' => 'permission:awarding.scores.input']);
+            });
+
+            // Hasil & Peringkat
+            $routes->group('results', static function ($routes) {
+                $routes->get('/', 'AwardingResultController::index', ['filter' => 'permission:awarding.results.view']);
+                $routes->get('export-csv', 'AwardingResultController::exportCsv', ['filter' => 'permission:awarding.results.export']);
+            });
         });
     });
 });

@@ -43,6 +43,13 @@ function isDropdownActive(array $paths): string {
       </li>
       <?php endif; ?>
 
+      <!-- Hasil Awarding (semua user yang punya permission) -->
+      <?php if (activeGroupCan('awarding.results.view') && !activeGroupCan('admin.access')): ?>
+      <li class="<?= isMenuActive('awarding-results') ? 'active' : '' ?>">
+        <a class="nav-link" href="<?= base_url('awarding-results') ?>"><i class="fas fa-trophy"></i> <span>Hasil Awarding</span></a>
+      </li>
+      <?php endif; ?>
+
       <!-- Admin Menu (hanya untuk active group yang punya akses admin) -->
       <?php if (activeGroupCan('admin.access')): ?>
       <li class="menu-header">Administrasi</li>
@@ -105,6 +112,36 @@ function isDropdownActive(array $paths): string {
       <li class="<?= isMenuActive('admin/reports') ?>">
         <a class="nav-link" href="<?= base_url('admin/reports') ?>"><i class="fas fa-file-alt"></i> <span>Laporan Ringkas</span></a>
       </li>
+      <?php endif; ?>
+
+      <!-- Awarding -->
+      <?php if (activeGroupCan('awarding.periods.list') || activeGroupCan('awarding.weights.manage') || activeGroupCan('awarding.scores.list') || activeGroupCan('awarding.results.view')): ?>
+      <li class="menu-header">Awarding</li>
+
+      <?php if (activeGroupCan('awarding.periods.list')): ?>
+      <li class="<?= isMenuActive('admin/awarding/periods') ?>">
+        <a class="nav-link" href="<?= base_url('admin/awarding/periods') ?>"><i class="fas fa-calendar-check"></i> <span>Periode Awarding</span></a>
+      </li>
+      <?php endif; ?>
+
+      <?php if (activeGroupCan('awarding.weights.manage')): ?>
+      <li class="<?= isMenuActive('admin/awarding/weights') ?>">
+        <a class="nav-link" href="<?= base_url('admin/awarding/weights') ?>"><i class="fas fa-balance-scale"></i> <span>Bobot Penilaian</span></a>
+      </li>
+      <?php endif; ?>
+
+      <?php if (activeGroupCan('awarding.scores.list')): ?>
+      <li class="<?= isMenuActive('admin/awarding/scores') ?>">
+        <a class="nav-link" href="<?= base_url('admin/awarding/scores') ?>"><i class="fas fa-clipboard-check"></i> <span>Input Penilaian</span></a>
+      </li>
+      <?php endif; ?>
+
+      <?php if (activeGroupCan('awarding.results.view')): ?>
+      <li class="<?= isMenuActive('admin/awarding/results') ?>">
+        <a class="nav-link" href="<?= base_url('admin/awarding/results') ?>"><i class="fas fa-trophy"></i> <span>Hasil & Peringkat</span></a>
+      </li>
+      <?php endif; ?>
+
       <?php endif; ?>
 
       <?php endif; ?>

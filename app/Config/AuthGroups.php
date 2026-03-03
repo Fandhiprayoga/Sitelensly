@@ -90,6 +90,19 @@ class AuthGroups extends ShieldAuthGroups
 
         // Performance Dashboard
         'performance.dashboard' => 'Dapat melihat dashboard performansi',
+
+        // Awarding
+        'awarding.periods.list'    => 'Dapat melihat daftar periode awarding',
+        'awarding.periods.create'  => 'Dapat membuat periode awarding',
+        'awarding.periods.edit'    => 'Dapat mengedit periode awarding',
+        'awarding.periods.delete'  => 'Dapat menghapus periode awarding',
+        'awarding.weights.manage'  => 'Dapat mengelola bobot penilaian awarding',
+        'awarding.scores.list'     => 'Dapat melihat daftar penilaian awarding',
+        'awarding.scores.input'    => 'Dapat menginput penilaian awarding',
+        'awarding.scores.edit'     => 'Dapat mengedit penilaian awarding',
+        'awarding.scores.delete'   => 'Dapat menghapus penilaian awarding',
+        'awarding.results.view'    => 'Dapat melihat hasil & peringkat awarding',
+        'awarding.results.export'  => 'Dapat mengekspor hasil awarding',
     ];
 
     /**
@@ -107,6 +120,7 @@ class AuthGroups extends ShieldAuthGroups
             'periods.*',
             'websites.*',
             'performance.*',
+            'awarding.*',
         ],
         'admin' => [
             'admin.access',
@@ -119,6 +133,7 @@ class AuthGroups extends ShieldAuthGroups
             'periods.*',
             'websites.*',
             'performance.*',
+            'awarding.*',
         ],
         'manager' => [
             'admin.access',
@@ -129,10 +144,15 @@ class AuthGroups extends ShieldAuthGroups
             'websites.list',
             'performance.list',
             'performance.dashboard',
+            'awarding.periods.list',
+            'awarding.scores.list',
+            'awarding.results.view',
+            'awarding.results.export',
         ],
         'user' => [
             'dashboard.access',
             'performance.dashboard',
+            'awarding.results.view',
         ],
     ];
 }
