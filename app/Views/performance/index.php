@@ -70,7 +70,7 @@
                 <td>
                   <!-- Detail Artikel -->
                   <?php if (!empty($perf['articles'])): ?>
-                  <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#articlesModal<?= $perf['id'] ?>" title="Lihat Artikel">
+                  <button type="button" class="btn btn-sm btn-info btn-articles-modal" data-id="<?= $perf['id'] ?>" title="Lihat Artikel">
                     <i class="fas fa-newspaper"></i>
                   </button>
                   <?php endif; ?>
@@ -136,3 +136,19 @@
 <?php endif; ?>
 <?php endforeach; ?>
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Move modals to body to avoid stacking context / overflow issues
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        document.body.appendChild(modal);
+    });
+
+    // Explicit modal trigger (bypass Stisla data-api interference)
+    $(document).on('click', '.btn-articles-modal', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        $('#articlesModal' + id).modal('show');
+    });
+});
+</script>
