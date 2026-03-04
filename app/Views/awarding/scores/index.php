@@ -82,7 +82,7 @@
                 <td class="text-center">
                   <strong class="text-warning"><?= $score['calc_standard'] ?>/17</strong>
                   <!-- Detail Button -->
-                  <button type="button" class="btn btn-xs btn-outline-info ml-1" data-toggle="modal" data-target="#stdModal<?= $score['id'] ?>" title="Detail Elemen">
+                  <button type="button" class="btn btn-xs btn-outline-info ml-1 btn-std-modal" data-id="<?= $score['id'] ?>" title="Detail Elemen">
                     <i class="fas fa-eye"></i>
                   </button>
                 </td>
@@ -160,3 +160,19 @@
 </div>
 <?php endforeach; ?>
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Move modals to body to avoid stacking context / overflow issues
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        document.body.appendChild(modal);
+    });
+
+    // Explicit modal trigger (bypass Stisla data-api interference)
+    $(document).on('click', '.btn-std-modal', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        $('#stdModal' + id).modal('show');
+    });
+});
+</script>
